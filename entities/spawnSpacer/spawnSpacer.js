@@ -24,7 +24,7 @@
                 y: 0,
                 z: zInt - (spawnSize.z / 2.0)
             };
-            // V2 BONUS: ROTATION UPGRADE!!!!
+            // Rotate our offset based on the rotation of the spawn spacer entity
             vNewPos = Vec3.multiplyQbyV(spawnRotation, vNewPos);
             // Combine with the spawnPosition
             vNewPos = Vec3.sum(vNewPos, spawnPosition);
