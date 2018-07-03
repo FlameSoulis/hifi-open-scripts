@@ -44,7 +44,7 @@
 
     // Modified from system/libraries/utils.js
     function ourRandInt(low, high) {
-        // I'm not a fan of founding down...
+        // I'm not a fan of rounding down...
         // It makes the max not really the max
         return Math.round(low + Math.random() * (high - low));
     }
