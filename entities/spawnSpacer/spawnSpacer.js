@@ -13,15 +13,25 @@
         var spawnRotation = Entities.getEntityProperties(entityID, 'rotation').rotation;
 
         // Cool, now lets see if the user spawned in where we are!
-        if (compareVec3(spawnPosition, MyAvatar.position, spawnSensitivity)) {
+        if (compareVec3(spawnPosition, MyAvatar.position, spawnSensitivity) ||
+          compareVec3(spawnPosition, MyAvatar.getWorldFeetPosition(), spawnSensitivity)) {
             print("Spawn spacer activated...");
+            // Due to 0.72.0, we have to determine the offset of the feet
+            var yOffset = 0.0;
+            // Did we trigger by feet or by position?
+            if (Vec3.distance(spawnPosition, MyAvatar.getWorldFeetPosition()) <
+              Vec3.distance(spawnPosition, MyAvatar.position)) {
+                var footOffset = Vec3.subtract(MyAvatar.position, MyAvatar.getWorldFeetPosition());
+                footOffset = Vec3.multiplyQbyV(MyAvatar.orientation, footOffset);
+                yOffset = footOffset.y;
+            }
             // Make some random numbers
             var xInt = ourRandInt(0, spawnSize.x);
             var zInt = ourRandInt(0, spawnSize.z);
             // Create a new offset
             var vNewPos = {
                 x: xInt - (spawnSize.x / 2.0),
-                y: 0,
+                y: yOffset,
                 z: zInt - (spawnSize.z / 2.0)
             };
             // Rotate our offset based on the rotation of the spawn spacer entity
