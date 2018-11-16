@@ -2,7 +2,7 @@
     var MARKETPLACE_URL = Account.metaverseServerURL + "/marketplace";
     var MARKETPLACES_INJECT_SCRIPT_URL = Script.resolvePath("/~/system/html/js/marketplacesInject.js");
     var METAVERSE_SERVER_URL = Account.metaverseServerURL;
-    var MARKETPLACE_URL_INITIAL = MARKETPLACE_URL + "?"; // Append "?" to signal injected script that it's the initial page.
+    var MARKETPLACE_URL_INITIAL = MARKETPLACE_URL + "?";
 
     var entityID = Uuid.NULL;
     var tablet = null;
@@ -22,7 +22,7 @@
     }
 
     function checkURLUserData(_entityID) {
-        // First, see if the url parameter exists
+        // First, see if the marketid parameter exists
         var properties = Entities.getEntityProperties(_entityID, ["userData"]);
         var jsonData = JSON.parse(properties["userData"]);
         if (jsonData["marketid"] === undefined) {
@@ -43,21 +43,22 @@
             // Check if we are close enough to click the shortcut
             var position = Entities.getEntityProperties(_entityID, ["position"])["position"];
             if (Vec3.distance(MyAvatar.position, position) < 15) {
-                var urlToUse = checkURLUserData(_entityID);
+                var marketid = checkURLUserData(_entityID);
                 // Okay, figure it out
                 if ((typeof event) === "string") {
                     // VR User Check
                     if (event.indexOf(MyAvatar.sessionUUID) !== -1) {
-                        openMarketplace(urlToUse);
+                        openMarketplace(marketid);
                     }
                 } else if (event.isPrimaryButton !== undefined) {
                     // Clicked! (Desktop User Check)
-                    openMarketplace(urlToUse);
+                    openMarketplace(marketid);
                 }
             }
         }
     }
 
+    // From: https://github.com/highfidelity/hifi/blob/master/scripts/system/commerce/wallet.js#L386
     function openMarketplace(optionalItemOrUrl) {
         // This is a bit of a kluge, but so is the whole file.
         // If given a whole path, use it with no cta.
